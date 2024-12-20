@@ -132,8 +132,8 @@ MODELS = {
     "scibert": f"/gpfswork/rech/pds/upa43yu/models/scibert-base",
     "arabert": f"/gpfswork/rech/pds/upa43yu/models/bert-base-arabert",
     "bertlarge": f"/gpfsdswork/dataset/HuggingFace_Models/bert-large-cased",
-    # "scibert_cased": f"/gpfswork/rech/pds/upa43yu/models/scibert_cased",
-    "scibert_cased": f"/home/zhuchao/models/scibert_cased",
+    "scibert_cased": f"/gpfswork/rech/pds/upa43yu/models/scibert_cased",
+    # "scibert_cased": f"/home/zhuchao/models/scibert_cased",
     "albert": f"/gpfswork/rech/pds/upa43yu/models/albert-xxlarge-v2",
     "spanbertlarge": f"/gpfswork/rech/pds/upa43yu/models/spanbert-large-cased",
     "t5-s": "/gpfsdswork/dataset/HuggingFace_Models/t5-small",
@@ -146,7 +146,7 @@ MODELS = {
 # #training_arguments
 def create_parser():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--data_file', type=str, default='dataset/cqi.pkl')
+    parser.add_argument('--data_file', type=str, default='dataset/sqi.pkl')
     parser.add_argument('--model_name', type=str, default='scibert_cased')
     parser.add_argument('--max_width', type=int, default=20)
     parser.add_argument('--num_prompts', type=int, default=5)

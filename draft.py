@@ -1,80 +1,105 @@
-from transformers import AutoModel, AutoTokenizer
-from transformers import AutoTokenizer, AutoModelForCausalLM
-
-import os
-os.environ['HF_ENDPOINT'] = 'https://hf-mirror.com'
+# import json
 #
-# MODELS = {
-#     "spanbert": f"/gpfswork/rech/pds/upa43yu/models/spanbert-base-cased",
-#     "bert": f"/gpfswork/rech/pds/upa43yu/models/bert-base-cased",
-#     "roberta": f"/gpfswork/rech/pds/upa43yu/models/roberta-base",
-#     "scibert": f"/gpfswork/rech/pds/upa43yu/models/scibert-base",
-#     "arabert": f"/gpfswork/rech/pds/upa43yu/models/bert-base-arabert",
-#     "bertlarge": f"/gpfsdswork/dataset/HuggingFace_Models/bert-large-cased",
-#     "scibert_cased": f"/gpfswork/rech/pds/upa43yu/models/scibert_cased",
-#     "albert": f"/gpfswork/rech/pds/upa43yu/models/albert-xxlarge-v2",
-#     "spanbertlarge": f"/gpfswork/rech/pds/upa43yu/models/spanbert-large-cased",
-#     "t5-s": "/gpfsdswork/dataset/HuggingFace_Models/t5-small",
-#     "t5-m": "/gpfsdswork/dataset/HuggingFace_Models/t5-base",
-#     "t5-l": "/gpfsdswork/dataset/HuggingFace_Models/t5-large",
-#     "deberta": "/gpfswork/rech/pds/upa43yu/models/deberta-v3-large",
-# }
 #
-# model_name = "meta-llama/Llama-3.2-1B"
-# tokenizer = AutoTokenizer.from_pretrained(model_name)
-# llama_decoder = AutoModelForCausalLM.from_pretrained(model_name)
-# llama_decoder.save_pretrained("/models")
-# tokenizer.save_pretrained("/models")
+# def convert_format(data):
+#     # 用于转换每条元素的函数
+#     converted_data = []
+#
+#     for item in data:
+#         # 转换 tokens
+#         tokens = item['tokens']
+#
+#         # 转换 entities 格式
+#         ner = [[entity['start'], entity['end'], entity['type']] for entity in item['entities']]
+#
+#         # 转换 relations 格式
+#         rel = [[relation['head'], relation['tail'], relation['type']] for relation in item['relations']]
+#
+#         # 格式化成新的数据结构
+#         converted_item = {
+#             "tokens": tokens,
+#             "ner": ner,
+#             "rel": rel,
+#             "seq": []  # seq 空数组
+#         }
+#
+#         converted_data.append(converted_item)
+#
+#     return converted_data
+#
+#
+# def main():
+#     # 假设数据存储在json文件中，首先加载文件
+#     input_file = 'dataset/SQI/sqi.json'  # 原始数据文件路径
+#     output_file = 'dataset/SQI/processed_sqi.json'  # 输出文件路径
+#
+#     with open(input_file, 'r', encoding='utf-8') as infile:
+#         data = json.load(infile)
+#
+#     # 转换 train, dev, test 数据
+#     converted_train = convert_format(data['train'])
+#     converted_dev = convert_format(data['dev'])
+#     converted_test = convert_format(data['test'])
+#
+#     # 保存转换后的数据
+#     converted_json = {
+#         "train": converted_train,
+#         "dev": converted_dev,
+#         "test": converted_test
+#     }
+#
+#     with open(output_file, 'w', encoding='utf-8') as outfile:
+#         json.dump(converted_json, outfile, ensure_ascii=False, indent=4)
+#
+#     print(f"数据已成功转换并保存到 {output_file}")
+#
+#
+# if __name__ == '__main__':
+#     main()
 
-import torch
-import torch.nn as nn
 
-# Step 1: 加载 Llama 模型和 tokenizer
-llama_model_name = "meta-llama/Meta-Llama-2-7b-chat-hf"
-tokenizer = AutoTokenizer.from_pretrained(llama_model_name)
-llama_decoder = AutoModelForCausalLM.from_pretrained(llama_model_name, device_map="auto")
+import json
+import pickle
 
-# Step 2: 定义自己的模型
-class CustomTransformer(nn.Module):
-    def __init__(self, llama_decoder):
-        super(CustomTransformer, self).__init__()
-        # 假设已经有自己的 Encoder 部分
-        self.encoder = nn.TransformerEncoder(
-            nn.TransformerEncoderLayer(d_model=768, nhead=8), num_layers=6
-        )
-        # 替换 Decoder 为 Llama 的解码器部分
-        self.decoder = llama_decoder
+def convert_ner_and_rel(data):
+    """
+    Convert ner and rel elements to tuple format.
+    """
+    for split in ['train', 'dev', 'test']:
+        for item in data[split]:
+            # Convert ner from list to tuple
+            item['ner'] = [tuple(ner) for ner in item['ner']]
+            # Convert rel from list to tuple
+            item['rel'] = [tuple(rel) for rel in item['rel']]
+    return data
 
-    def forward(self, input_ids, encoder_hidden_states, attention_mask=None):
-        # Encoder 前向传播
-        encoder_outputs = self.encoder(encoder_hidden_states)
+def save_to_pkl(data, output_file):
+    """ Save the processed data to a .pkl file """
+    with open(output_file, 'wb') as f:
+        pickle.dump(data, f)
 
-        # 调用 Llama 的解码器前向传播
-        outputs = self.decoder(
-            input_ids=input_ids,
-            encoder_hidden_states=encoder_outputs,
-            attention_mask=attention_mask,
-            use_cache=False,
-        )
-        return outputs
+def load_json(input_file):
+    """ Load the JSON file """
+    with open(input_file, 'r', encoding='utf-8') as f:
+        return json.load(f)
 
-# Step 3: 初始化模型
-custom_model = CustomTransformer(llama_decoder)
+def main():
+    # Specify the input JSON and output .pkl file paths
+    input_file = 'dataset/SQI/processed_sqi.json'  # Input JSON file
+    output_file = 'dataset/sqi.pkl'  # Output .pkl file
 
-# Step 4: 测试输入
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-custom_model.to(device)
+    # Load the JSON data
+    data = load_json(input_file)
 
-# 示例输入
-input_text = "The quick brown fox"
-input_ids = tokenizer(input_text, return_tensors="pt").input_ids.to(device)
-encoder_hidden_states = torch.rand((1, 10, 768)).to(device)  # 模拟 Encoder 输出
+    # Convert 'ner' and 'rel' to tuple format
+    data = convert_ner_and_rel(data)
 
-# Forward 传播
-outputs = custom_model(input_ids=input_ids, encoder_hidden_states=encoder_hidden_states)
-decoded_text = tokenizer.decode(outputs.logits.argmax(dim=-1).squeeze().tolist())
+    # Save the data as .pkl
+    save_to_pkl(data, output_file)
+    print(f"Data has been successfully saved to {output_file}")
 
-print(f"Decoded text: {decoded_text}")
-print(f"Decoded text: {decoded_text}")
-print(f"Decoded text: {decoded_text}")
-print(f"Decoded text: {decoded_text}")
+if __name__ == "__main__":
+    main()
+
+
+

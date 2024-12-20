@@ -1,0 +1,2 @@
+{"entities": {"ENTITY": {"short": "ENTITY", "verbose": "ENTITY"}, "NUM": {"short": "NUM", "verbose": "NUM"}, "UNIT": {"short": "UNIT", "verbose":"UNIT"}}, 
+"relations": {"NUM-UNIT": {"short": "NUM-UNIT", "verbose": "NUM-UNIT", "symmetric": false}, "ENTITY-VALUE": {"short": "ENTITY-VALUE", "verbose": "ENTITY-VALUE", "symmetric": false}}}
