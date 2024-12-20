@@ -1,0 +1,104 @@
+[{
+    "tokens": [
+      "I",
+      "D",
+      ":",
+      "4",
+      "5",
+      "3",
+      "2",
+      "3",
+      "7",
+      "#",
+      "听",
+      "：",
+      "心",
+      "率",
+      "1",
+      "1",
+      "2",
+      "次",
+      "/",
+      "分",
+      "，"
+    ],
+    "entities": [
+      {
+        "type": "ENTITY",
+        "start": 12,
+        "end": 14
+      },
+      {
+        "type": "NUM",
+        "start": 14,
+        "end": 17
+      },
+      {
+        "type": "UNIT",
+        "start": 17,
+        "end": 20
+      }
+    ],
+    "relations": [
+      {
+        "type": "NUM-UNIT",
+        "head": 1,
+        "tail": 2
+      },
+      {
+        "type": "ENTITY-VALUE",
+        "head": 0,
+        "tail": 1
+      }
+    ],
+    "orig_id": 4
+  },{
+    "tokens": [
+      "I",
+      "D",
+      ":",
+      "4",
+      "5",
+      "3",
+      "2",
+      "3",
+      "7",
+      "#",
+      "面",
+      "积",
+      "约",
+      "8",
+      "%",
+      "，"
+    ],
+    "entities": [
+      {
+        "type": "ENTITY",
+        "start": 10,
+        "end": 12
+      },
+      {
+        "type": "NUM",
+        "start": 13,
+        "end": 14
+      },
+      {
+        "type": "UNIT",
+        "start": 14,
+        "end": 15
+      }
+    ],
+    "relations": [
+      {
+        "type": "NUM-UNIT",
+        "head": 1,
+        "tail": 2
+      },
+      {
+        "type": "ENTITY-VALUE",
+        "head": 0,
+        "tail": 1
+      }
+    ],
+    "orig_id": 5
+  }]
