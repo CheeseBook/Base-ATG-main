@@ -140,6 +140,7 @@ MODELS = {
     "t5-m": "/gpfsdswork/dataset/HuggingFace_Models/t5-base",
     "t5-l": "/gpfsdswork/dataset/HuggingFace_Models/t5-large",
     "deberta": "/gpfswork/rech/pds/upa43yu/models/deberta-v3-large",
+    "bert-base-chinese": "/model/bert-base-chinese"
 }
 
 
@@ -147,18 +148,18 @@ MODELS = {
 def create_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument('--data_file', type=str, default='dataset/sqi.pkl')
-    parser.add_argument('--model_name', type=str, default='scibert_cased')
+    parser.add_argument('--model_name', type=str, default='bert-base-chinese')
     parser.add_argument('--max_width', type=int, default=20)
     parser.add_argument('--num_prompts', type=int, default=5)
-    parser.add_argument('--hidden_transformer', type=int, default=512)
+    parser.add_argument('--hidden_transformer', type=int, default=768)
     parser.add_argument('--num_transformer_layers', type=int, default=6)
-    parser.add_argument('--attention_heads', type=int, default=8)
+    parser.add_argument('--attention_heads', type=int, default=12)
     parser.add_argument('--span_mode', type=str, default='conv_share')
     parser.add_argument('--p_drop', type=float, default=0.1)
     parser.add_argument('--use_pos_code', type=bool, default=True)
-    parser.add_argument('--n_epochs', type=int, default=200)
+    parser.add_argument('--n_epochs', type=int, default=100)
     parser.add_argument('--n_steps', type=int, default=10000)
-    parser.add_argument('--batch_size', type=int, default=12)
+    parser.add_argument('--batch_size', type=int, default=8)
     parser.add_argument('--eval_batch_size', type=int, default=1)
     parser.add_argument('--lr_encoder', type=float, default=1e-5)
     parser.add_argument('--lr_decoder', type=float, default=1e-4)
@@ -167,7 +168,7 @@ def create_parser():
     parser.add_argument('--grad_accumulation_steps', type=int, default=1)
     parser.add_argument('--save_interval', type=int, default=1000)
     parser.add_argument('--max_num_samples', type=int, default=1)
-    parser.add_argument('--log_dir', type=str, default="/home/zhuchao/result/Base-ATG-main5")
+    parser.add_argument('--log_dir', type=str, default="/home/zhuchao/result/sqi/Base-ATG-main1")
     parser.add_argument('--cross_attn', type=bool, default=True)
     return parser
 
@@ -175,6 +176,14 @@ def create_parser():
 if __name__ == '__main__':
     parser = create_parser()
     args = parser.parse_args()
+
+    log_dir = args.log_dir
+    if not os.path.exists(log_dir):
+        os.makedirs(log_dir, exist_ok=True)  # 如果目录不存在，则创建它
+    with open(args.log_dir + "/params.txt", 'w') as f:
+        for arg, value in vars(args).items():
+            f.write(f'{arg}: {value}\n')
+
 
     if torch.cuda.is_available():
         device = torch.device("cuda")
