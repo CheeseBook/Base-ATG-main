@@ -147,7 +147,7 @@ MODELS = {
 # #training_arguments
 def create_parser():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--data_file', type=str, default='dataset/cqi.pkl')
+    parser.add_argument('--data_file', type=str, default='dataset/sqi.pkl')
     parser.add_argument('--model_name', type=str, default='bert-base-chinese')
     parser.add_argument('--max_width', type=int, default=20)
     parser.add_argument('--num_prompts', type=int, default=5)
@@ -159,16 +159,16 @@ def create_parser():
     parser.add_argument('--use_pos_code', type=bool, default=True)
     parser.add_argument('--n_epochs', type=int, default=300)
     parser.add_argument('--n_steps', type=int, default=10000)
-    parser.add_argument('--batch_size', type=int, default=12)
+    parser.add_argument('--batch_size', type=int, default=8)
     parser.add_argument('--eval_batch_size', type=int, default=1)
     parser.add_argument('--lr_encoder', type=float, default=1e-5)
     parser.add_argument('--lr_decoder', type=float, default=1e-4)
     parser.add_argument('--lr_others', type=float, default=5e-4)
     parser.add_argument('--warmup_ratio', type=float, default=0.1)
     parser.add_argument('--grad_accumulation_steps', type=int, default=1)
-    parser.add_argument('--save_interval', type=int, default=1000)
+    parser.add_argument('--save_interval', type=int, default=500)
     parser.add_argument('--max_num_samples', type=int, default=1)
-    parser.add_argument('--log_dir', type=str, default="/home/zhuchao/result/new_dataset/cqi/Base-ATG-main14（b=12，p_drop=0.2）")
+    parser.add_argument('--log_dir', type=str, default="/home/zhuchao/result/new_dataset/sqi/Base-ATG-main14（b=8，p_drop=0.2）")
     parser.add_argument('--cross_attn', type=bool, default=True)
     return parser
 

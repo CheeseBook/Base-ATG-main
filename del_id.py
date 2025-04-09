@@ -14,4 +14,4 @@ def remove_id_from_json(file_path, output_path):
 
 
 # 示例用法
-remove_id_from_json("dataset/CQI/cqi.json", "dataset/CQI/cqi.json")
+remove_id_from_json("dataset/SQI/sqi.json", "dataset/SQI/sqi.json")

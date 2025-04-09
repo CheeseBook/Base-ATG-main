@@ -2,9 +2,9 @@ import json
 import pickle
 
 # 输入 JSON 文件路径
-input_file = "dataset/CQI/cqi.json"
+input_file = "dataset/SQI/sqi.json"
 # 输出 .pkl 文件路径
-output_file = "dataset/cqi.pkl"
+output_file = "dataset/sqi.pkl"
 
 
 def validate_and_convert(data):
